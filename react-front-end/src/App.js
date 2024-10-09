@@ -2,14 +2,16 @@ import logo from './logo.svg';
 import './App.css';
 import Home from './Home';
 import Patient_login from './Patient_Login';
-import {Routes, Link} from "react-router-dom";
+import {Routes, Route, Link} from "react-router-dom";
 
 
 function App() {
   return (
     <div className="App">
-      <Routes exact path="/" component={Home} />
-      <Routes exact path="/patientLogin" component={Patient_login} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/patientLogin" element={<Patient_login />} />
+      </Routes>
 
 
       {/* <header className="App-header">
