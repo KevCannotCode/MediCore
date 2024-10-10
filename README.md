@@ -29,7 +29,7 @@ With your virtual environment activated, you can install FastAPI using pip:
 pip install fastapi
 
 Run your application using Uvicorn:
-The main.py files has a basic server running. Here is the command to start it:
+The main.py files has a basic server running. Navigate to the medicore-app/backend and run this command to start it:
 uvicorn main:app --reload
 
 The --reload option allows the server to automatically reload your application when you make changes to the code.
