@@ -35,3 +35,34 @@ uvicorn main:app --reload
 The --reload option allows the server to automatically reload your application when you make changes to the code.
 
 You should see output indicating that the server is running on http://127.0.0.1:8000. Open this URL in your web browser to see your API in action.
+
+#Install MongoDB
+For Windows:
+Download the MongoDB installer from the official MongoDB website.
+Run the installer and follow the prompts.
+Choose "Complete" setup and select "Install MongoDB as a Service" during installation for easy management.
+Add MongoDB to your system's PATH to access it from the command line.
+
+#For macOS:
+Use Homebrew to install MongoDB by running:
+brew tap mongodb/brew
+brew install mongodb-community@6.0
+
+#After installation, start MongoDB:
+brew services start mongodb-community@6.0
+
+#For Linux (Ubuntu):
+Import the MongoDB public GPG key:
+wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+
+#Create a list file for MongoDB:
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+
+#Reload the package database and install MongoDB:
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+
+#Start MongoDB:
+sudo systemctl start mongod
+
+
