@@ -9,6 +9,7 @@ MongoDB: Set up MongoDB locally or use a cloud instance. More details can be fou
 Postman: For testing APIs. Download and install from postman.com
 
 ## Install MongoDB
+
 ### For Windows:
 
 Download the MongoDB installer from the official MongoDB website.
@@ -17,7 +18,6 @@ Choose "Complete" setup and select "Install MongoDB as a Service" during install
 Add MongoDB to your system's PATH to access it from the command line.
 
 ### For macOS:
-
 Use Homebrew to install MongoDB by running:
     
     brew tap mongodb/brew
@@ -49,8 +49,8 @@ Start MongoDB:
 
 To run the backend and frontend, naviguate to each directories and run the following commands:
 
-npm install
-npm start 
+    npm install
+    npm start 
 
 The backend server will be listening on http://localhost:3000.
 The frontend server will be listening on http://localhost:8080.
