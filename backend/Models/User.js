@@ -14,7 +14,12 @@ const UserSchema = new Schema({
     password: {
         type: String,
         required: true,
-    }
+    },
+    role: {
+        type: [String],
+        enum: ['patient', 'doctor', 'admin'],
+        required: true
+    },
 });
 
 const UserModel = mongoose.model('users', UserSchema);
