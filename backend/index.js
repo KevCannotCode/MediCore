@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const AuthRouter = require('./Routes/AuthRouter');
 const ProductRouter = require('./Routes/ProductRouter');
+const AdminRouter = require('./Routes/AdminRouter');
 
 require('dotenv').config();
 require('./Models/db');
@@ -17,7 +18,7 @@ app.get('/ping', (req, res) => {
  app.use(cors());
  app.use('/auth', AuthRouter);
  app.use('/products', ProductRouter);
-
+ app.use('/Admin', AdminRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`)
