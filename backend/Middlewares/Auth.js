@@ -50,7 +50,6 @@ const verifyRole = (allowedRole) => {
 
 module.exports = {
     ensureAuthenticated,
-    verifyRole,
-    deleteAccount
+    verifyRole
 }
 // module.exports = ensureAuthenticated;
