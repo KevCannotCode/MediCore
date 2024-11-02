@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-// const deleteAccount = require('../Middlewares/AccountManagement');
 const Auth = require('../Middlewares/Auth');
 const AccountManagement = require('../Middlewares/AccountManagement');
 const AuthValidation = require('../Middlewares/AuthValidation');
