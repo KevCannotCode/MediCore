@@ -27,6 +27,12 @@ const deleteAccount = async (req, res, next) => {
     }
 }
 
+/*
+    The createAccount is a function that returns a middleware function.
+    The middleware function checks if the user exists in the database.
+    If the user exists, the function will return a 409 status code with a message.
+    If the user does not exist, the function will create a new user in the database.
+*/
 const createAccount = async (req, res, next) => {
     try {
         const { name, email, password, role } = req.body;
@@ -43,6 +49,12 @@ const createAccount = async (req, res, next) => {
     }
 }
 
+/*
+    AssignRole is a function that returns a middleware function.
+    The middleware function checks if the user exists in the database.
+    If the user exists, the function will update the user's role in the database.
+    If the user does not exist, the function will return a 404 status code with a message.
+*/
 const assignRole = async (req, res, next) => {
     try {
         // Get verify email
@@ -66,6 +78,9 @@ const assignRole = async (req, res, next) => {
     }
 }
 
+/*
+    The module.exports object is used to make the functions available to other files.
+*/
 module.exports = {
     deleteAccount,
     createAccount,
