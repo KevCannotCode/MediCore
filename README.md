@@ -49,8 +49,8 @@ Start MongoDB:
 
 To run the backend and frontend, naviguate to each directories and run the following commands:
 
-npm install
-npm start 
+    npm install
+    npm start 
 
 The backend server will be listening on http://localhost:3000.
 The frontend server will be listening on http://localhost:8080.
