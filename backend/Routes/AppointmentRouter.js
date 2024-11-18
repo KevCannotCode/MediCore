@@ -3,7 +3,7 @@ const router = express.Router();
 const Auth = require('../Middlewares/Auth');
 const AccountManagement = require('../Controllers/AccountManagement');
 const AuthValidation = require('../Middlewares/AuthValidation');
-const AppointmentManagement = require('../Controllers/AppointmentManagement');
+const AppointmentManagement = require('../Controllers/AppointmentController');
 
 // Middleware to verify that the user is an admin
 
@@ -48,11 +48,17 @@ const AppointmentManagement = require('../Controllers/AppointmentManagement');
  * router.use(Auth.verifyRole('patient'));
  * TODO: serve the appropriate frontend pages
  */
-router.post('/createAppointment', Auth.verifyRole('patient'), AccountManagement.assignRole, (req, res) => {
+router.post('/createAppointment', Auth.verifyRole('patient'), AppointmentManagement.createAppointment, (req, res) => {
     console.log('---- Create Appointment POST ---', req.user);
     res.status(200).json([
         { message: 'Appointment was successfully created '}
     ])
 });
 
+router.post('/doctorUpdate', Auth.verifyRole('doctor'), AppointmentManagement.doctorUpdate, (req, res) => {
+    console.log('---- Create Appointment POST ---', req.user);
+    res.status(200).json([
+        { message: 'Appointment was successfully updated by doctor '}
+    ])
+});
 module.exports = router;

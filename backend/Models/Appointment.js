@@ -22,24 +22,24 @@ const AppointmentSchema = new Schema({
         type: String
     },
     notes: {
-        type: Array[String]
+        type: [String]
     },
     allergies: {
-        type: Array[String]
+        type: [String]
     },
     conditions: {
-        type: Array[String]
+        type: [String]
     },
     medications: {
-        type: Array[String]
+        type: [String]
     },
     immunizations: {
-        type: Array[String]
+        type: [String]
     },
     procedures: {
-        type: Array[String]
+        type: [String]
     }
 });
 
-const AppointmentModel = mongoose.model('users', AppointmentSchema);
+const AppointmentModel = mongoose.model('appointments', AppointmentSchema);
 module.exports = AppointmentModel;
