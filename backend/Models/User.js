@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
 const UserSchema = new mongoose.Schema({
     name: {
@@ -22,8 +23,7 @@ const UserSchema = new mongoose.Schema({
     },
     //UnComment when medical_records is ready
     medical_records: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'MedicalRecord'
+        type: ObjectId
     },
 });
 
