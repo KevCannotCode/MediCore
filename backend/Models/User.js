@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
+const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -19,6 +19,11 @@ const UserSchema = new Schema({
         type: [String],
         enum: ['patient', 'doctor', 'admin'],
         required: true
+    },
+    //UnComment when medical_records is ready
+    medical_records: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'MedicalRecord'
     },
 });
 
