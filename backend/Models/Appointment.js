@@ -15,7 +15,7 @@ const AppointmentSchema = new Schema({
         type: Date,
         required: true,
     },
-    diagnosis : {   
+    reason_for_appointment: {   
         type: String
     },
     treatment: {    

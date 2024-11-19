@@ -55,8 +55,8 @@ router.post('/createAppointment', Auth.verifyRole('patient'), AppointmentManagem
     ])
 });
 
-router.post('/doctorUpdate', Auth.verifyRole('doctor'), AppointmentManagement.doctorUpdate, (req, res) => {
-    console.log('---- Create Appointment POST ---', req.user);
+router.post('/doctorUpdate/:appointmentId', Auth.verifyRole('doctor'), AppointmentManagement.doctorUpdate, (req, res) => {
+    console.log('---- Update Appointment POST ---', req.user);
     res.status(200).json([
         { message: 'Appointment was successfully updated by doctor '}
     ])

@@ -1,16 +1,19 @@
 // const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const UserModel = require("../Models/User");
 const AppointmentModel = require("../Models/Appointment");
 const JWTTokenService = require('jsonwebtoken');
+const ObjectId = mongoose.Types.ObjectId;
+
 
 const createAppointment = async (req, res, next) => {
     try {
         // Get appointment details
-        const { doctorEmail, date, diagnosis} = req.body;
+        const { doctorEmail, date, reason_for_appointment} = req.body;
 
         // Data validation
-        if (!doctorEmail || !date || !diagnosis) {
+        if (!doctorEmail || !date || !reason_for_appointment) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
 
@@ -52,7 +55,7 @@ const createAppointment = async (req, res, next) => {
             patientId: patient._id,
             doctorId: doctor._id,
             date: date,
-            diagnosis: "Patient " + patient.name +": " + diagnosis + "\n",
+            reason_for_appointment: "Patient " + patient.name +": " + reason_for_appointment + "\n",
             treatment: "",
             notes: [],
             allergies: [],
@@ -72,11 +75,24 @@ const createAppointment = async (req, res, next) => {
 const doctorUpdate = async (req, res, next) => {
     try {
         // Get appointment details
-        const { diagnosis, treatment, notes, allergies, conditions, medications, immunizations, procedures} = req.body;
+        const { appointmentId } = req.params;
+        const {  treatment, notes, allergies, conditions, medications, immunizations, procedures} = req.body;
 
         // Data validation
-        if (!diagnosis && !treatment && !notes && !allergies && !conditions && !medications && !immunizations && !procedures) {
-            return res.status(400).json({ message: 'At least one field must be provided' });
+        if (
+            (!treatment || treatment.trim() === '') &&
+            (!notes || notes.length === 0) &&
+            (!allergies || allergies.length === 0) &&
+            (!conditions || conditions.length === 0) &&
+            (!medications || medications.length === 0) &&
+            (!immunizations || immunizations.length === 0) &&
+            (!procedures || procedures.length === 0)
+        ) {
+            return res.status(400).json({ message: 'At least one non-empty field must be provided' });
+        }
+        
+        if (!appointmentId) {
+            return res.status(400).json({ message: 'Missing required appointment id' });
         }
 
         // Get jwt payload
@@ -91,23 +107,58 @@ const doctorUpdate = async (req, res, next) => {
         }
 
         // Verify that the appointment does not exist
-        const appointment = await AppointmentModel.findOne({ patientId: patient._id, doctorId: doctor._id, date: date });
+
+        const appointment = await AppointmentModel.findOne({ _id: new ObjectId(appointmentId) });
         if (!appointment) {
             return res.status(409).json({ message: 'Appointment does not exist!', success: false });
         }
         
-        // Update the appointment details
-        appointment.diagnosis = diagnosis;
-        appointment.treatment = treatment;
-        appointment.notes = notes;
-        appointment.allergies = allergies;
-        appointment.conditions = conditions;
-        appointment.medications = medications;
-        appointment.immunizations = immunizations;
-        appointment.procedures = procedures;
+        // Prepare date to update the medical record
+        const updateData = {};
+
+        // Check for `notes`, ensuring it's not null, undefined, or an empty array
+        if (notes !== null && notes !== undefined && notes.length > 0) {
+            updateData.notes = { $each: [notes] }; // Assuming `notes` is an array
+        }
+        
+        // Check for `allergies`
+        if (allergies !== null && allergies !== undefined && allergies.length > 0) {
+            updateData.allergies = { $each: [allergies] };
+        }
+        
+        // Check for `conditions`
+        if (conditions !== null && conditions !== undefined && conditions.length > 0) {
+            updateData.conditions = { $each: [conditions] };
+        }
+        
+        // Check for `immunizations`
+        if (immunizations !== null && immunizations !== undefined && immunizations.length > 0) {
+            updateData.immunizations = { $each: [immunizations] };
+        }
+        
+        // Check for `medications`
+        if (medications !== null && medications !== undefined && medications.length > 0) {
+            updateData.medications = { $each: [medications] };
+        }
+        
+        // Check for `procedures`
+        if (procedures !== null && procedures !== undefined && procedures.length > 0) {
+            updateData.procedures = { $each: [procedures] };
+        }
+
+        const updatedAppointment = await AppointmentModel.findByIdAndUpdate(
+            new ObjectId(appointmentId),
+            {
+                $push: updateData, // Append to arrays
+                $set: { // Update timestamps and metadata
+                    treatment: treatment ? treatment : "",
+                }
+            },
+            { new: true }
+        );
 
         // Save the updated appointment
-        await appointment.save();
+        await updatedAppointment.save();
         next();
     } catch (err) {
         res.status(500).json({ message: "Internal server errror => " + err, success: false });
