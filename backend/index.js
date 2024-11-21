@@ -8,6 +8,7 @@ const cors = require('cors');
 const AuthRouter = require('./Routes/AuthRouter');
 const ProductRouter = require('./Routes/ProductRouter');
 const AdminRouter = require('./Routes/AdminRouter');
+const MedicalRecordRouter = require('./Routes/MedicalRecordRoutes');
 const AppointmentRouter = require('./Routes/AppointmentRouter');
 
 // Load environment variables and database connection
@@ -30,6 +31,7 @@ app.use(cors());
 app.use('/auth', AuthRouter);
 app.use('/products', ProductRouter);
 app.use('/Admin', AdminRouter);
+app.use('/medicalRecord', MedicalRecordRouter);
 app.use('/Appointments', AppointmentRouter);
 
 // Start the server and listen on the specified port
