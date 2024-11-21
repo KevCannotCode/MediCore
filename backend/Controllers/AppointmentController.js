@@ -163,6 +163,9 @@ const doctorUpdate = async (req, res, next) => {
             { new: true }
         );
 
+        // Update the corresponding medical record
+        
+
         // Save the updated appointment
         await updatedAppointment.save();
         next();
