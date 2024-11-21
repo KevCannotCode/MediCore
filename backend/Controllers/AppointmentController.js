@@ -76,7 +76,7 @@ const doctorUpdate = async (req, res, next) => {
     try {
         // Get appointment details
         const { appointmentId } = req.params;
-        const {  treatment, notes, allergies, conditions, medications, immunizations, procedures} = req.body;
+        const { treatment, notes, allergies, conditions, medications, immunizations, procedures} = req.body;
 
         // Data validation
         if (
@@ -90,7 +90,7 @@ const doctorUpdate = async (req, res, next) => {
         ) {
             return res.status(400).json({ message: 'At least one non-empty field must be provided' });
         }
-        
+
         if (!appointmentId) {
             return res.status(400).json({ message: 'Missing required appointment id' });
         }
@@ -113,6 +113,11 @@ const doctorUpdate = async (req, res, next) => {
             return res.status(409).json({ message: 'Appointment does not exist!', success: false });
         }
         
+        //can only update appointment after it has occurred
+        if (new Date(appointment.date) > new Date()) {
+            return res.status(409).json({ message: 'Appointment has not occurred yet!', success: false });
+        }
+
         // Prepare date to update the medical record
         const updateData = {};
 
@@ -146,6 +151,7 @@ const doctorUpdate = async (req, res, next) => {
             updateData.procedures = { $each: [procedures] };
         }
 
+        
         const updatedAppointment = await AppointmentModel.findByIdAndUpdate(
             new ObjectId(appointmentId),
             {
@@ -164,34 +170,6 @@ const doctorUpdate = async (req, res, next) => {
         res.status(500).json({ message: "Internal server errror => " + err, success: false });
     }
 }
-/*
-    AssignRole is a function that returns a middleware function.
-    The middleware function checks if the user exists in the database.
-    If the user exists, the function will update the user's role in the database.
-    If the user does not exist, the function will return a 404 status code with a message.
-*/
-// const assignRole = async (req, res, next) => {
-//     try {
-//         // Get verify email
-//         const { email, newRole } = req.body;
-//         if (!email) {
-//             return res.status(404).json({ message: 'User not found' });
-//         }   
-
-//         const updatedUser = await UserModel.findOneAndUpdate(
-//             { email: email },
-//             { role: newRole },
-//             { new: true, runValidators: true }
-//         );
-//         if (!updatedUser) {
-//             return res.status(404).json({ message: 'User not found', success: false });
-//         }
-
-//         next();
-//     } catch (err) {
-//         return res.status(504).json({ message: 'Check assignRole in AccountManagement' });
-//     }
-// }
 
 /*
     The module.exports object is used to make the functions available to other files.
