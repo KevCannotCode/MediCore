@@ -61,4 +61,11 @@ router.post('/doctorUpdate/:appointmentId', Auth.verifyRole('doctor'), Appointme
         { message: 'Appointment was successfully updated by doctor '}
     ])
 });
+
+router.post('/cancellAppointment/:appointmentId', AppointmentManagement.deleteAppointment, (req, res) => {
+    console.log('---- Delete Appointment POST ---', req.user);
+    res.status(200).json([
+        { message: 'Appointment was successfully deleted'}
+    ])
+});
 module.exports = router;

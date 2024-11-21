@@ -171,10 +171,40 @@ const doctorUpdate = async (req, res, next) => {
     }
 }
 
+const deleteAppointment = async (req, res, next) => {
+    try {
+        const { appointmentId } = req.params;
+
+        // Get jwt payload
+        const auth = req.headers['authorization'];
+        const decoded = JWTTokenService.verify(auth, process.env.JWT_SECRET);
+        const userId = decoded._id;
+    
+        // Query Doctor 
+        const user = await UserModel.findOne({ _id: userId });
+    
+        // Verify that the appointment exists
+        const appointment = await AppointmentModel.findOne({ _id: new ObjectId(appointmentId) });
+        if (!appointment) {
+            return res.status(409).json({ message: 'Appointment does not exist!', success: false });
+        }
+    
+        if (!user || (user._id.toString() !== appointment.patientId.toString() && user._id.toString() !== appointment.doctorId.toString())) {
+            return res.status(403).json({ message: 'Forbidden, only the respective doctor or patient can delete the appointment' });
+        }
+    
+        // Delete appointment 
+        await appointment.deleteOne();
+        next();
+    } catch (err) {
+        return res.status(504).json({ message: 'Check deleteAccount in Auth\n' + err });
+    }
+}
 /*
     The module.exports object is used to make the functions available to other files.
 */
 module.exports = {
     createAppointment,
-    doctorUpdate
+    doctorUpdate,
+    deleteAppointment
 };
