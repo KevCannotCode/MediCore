@@ -55,14 +55,14 @@ router.post('/createAppointment', Auth.verifyRole('patient'), AppointmentManagem
     ])
 });
 
-router.post('/doctorUpdate/:appointmentId', Auth.verifyRole('doctor'), AppointmentManagement.doctorUpdate, (req, res) => {
+router.post('/doctorUpdate/:appointmentId/:medicalRecordUpdate', Auth.verifyRole('doctor'), AppointmentManagement.doctorUpdate, (req, res) => {
     console.log('---- Update Appointment POST ---', req.user);
     res.status(200).json([
         { message: 'Appointment was successfully updated by doctor '}
     ])
 });
 
-router.post('/cancellAppointment/:appointmentId', AppointmentManagement.deleteAppointment, (req, res) => {
+router.post('/deleteAppointment/:appointmentId', AppointmentManagement.deleteAppointment, (req, res) => {
     console.log('---- Delete Appointment POST ---', req.user);
     res.status(200).json([
         { message: 'Appointment was successfully deleted'}

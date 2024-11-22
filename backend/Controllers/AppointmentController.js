@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const UserModel = require("../Models/User");
 const AppointmentModel = require("../Models/Appointment");
 const JWTTokenService = require('jsonwebtoken');
+const MedicalRecordModel = require('../Models/MedicalRecord');
 const ObjectId = mongoose.Types.ObjectId;
 
 
@@ -75,7 +76,7 @@ const createAppointment = async (req, res, next) => {
 const doctorUpdate = async (req, res, next) => {
     try {
         // Get appointment details
-        const { appointmentId } = req.params;
+        const { appointmentId, medicalRecordUpdate} = req.params;
         const { treatment, notes, allergies, conditions, medications, immunizations, procedures} = req.body;
 
         // Data validation
@@ -91,8 +92,8 @@ const doctorUpdate = async (req, res, next) => {
             return res.status(400).json({ message: 'At least one non-empty field must be provided' });
         }
 
-        if (!appointmentId) {
-            return res.status(400).json({ message: 'Missing required appointment id' });
+        if (!appointmentId || !medicalRecordUpdate) {
+            return res.status(400).json({ message: 'Missing required appointment id and medicalRecordUpdate' });    
         }
 
         // Get jwt payload
@@ -163,11 +164,29 @@ const doctorUpdate = async (req, res, next) => {
             { new: true }
         );
 
-        // Update the corresponding medical record
         
-
-        // Save the updated appointment
-        await updatedAppointment.save();
+        // Update the corresponding medical record
+        if(medicalRecordUpdate == '1') {
+            const patient = await UserModel.findOne({ _id: appointment.patientId });
+            const updateMedicalRecord = await MedicalRecordModel.findByIdAndUpdate(
+                new ObjectId(patient.medical_records),
+                {
+                    $push: updateData, // Append to arrays
+                    $set: { // Update timestamps and metadata
+                        updated_at: new Date(),
+                        updated_by: doctor._id
+                    }
+                },
+                { new: true }
+            );
+    
+            if (!updateMedicalRecord) {
+                return res.status(404).json({ message: 'Medical record not found' });
+            }
+        
+            await updateMedicalRecord.save();
+        }
+    
         next();
     } catch (err) {
         res.status(500).json({ message: "Internal server errror => " + err, success: false });
