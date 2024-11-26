@@ -1,0 +1,35 @@
+.form-container { 
+    width: '300px'; 
+    margin: '20px'; 
+    padding: '20px'; 
+    border: '1px solid #d5e1ed'
+}
+
+div {
+    margin-bottom: '10px'
+}
+
+input {
+    width: '100%'; 
+    padding: '10px'; 
+    margin-top: '5px'; 
+    margin-bottom: '10px'; 
+    border: '1px 100px 100px 100px solid #ccc'; 
+    border-radius: '4px';
+    font-size: '16px'
+}
+
+button {
+    width: '100%'; 
+    padding: '10px'; 
+    margin-top: '5px'; 
+    margin-bottom: '10px'; 
+    border: '1px solid #ccc'; 
+    border-radius: '4px'; 
+    background-color: '#4CAF50'; 
+    color: 'white'; 
+    font-size: '16px';
+    background: '#4CAF50'; 
+    color: 'green';
+    cursor: 'pointer'
+}

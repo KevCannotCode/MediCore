@@ -30,24 +30,24 @@
   <link href="Styles_format/style.css" rel="stylesheet">
 
 </head>
-
-<body>
-
-  <!-- ======= Top Bar ======= -->
-  <div id="topbar" class="d-flex align-items-center fixed-top">
-    <div class="container d-flex justify-content-between">
-      <div class="contact-info d-flex align-items-center">
-        <i class="bi bi-envelope"></i> <a href="mailto:contact@example.com">medicore@marquette.edu</a>
-        <i class="bi bi-phone"></i> +1 4143495697
-      </div>
-      <div class="d-none d-lg-flex social-links align-items-center">
-        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></i></a>
+  <body>
+    <!-- ======= Top Bar ======= -->
+    <div id="topbar" class="d-flex align-items-center fixed-top">
+      <div class="container d-flex justify-content-between">
+        <div class="contact-info d-flex align-items-center">
+          <i class="bi bi-envelope"></i> <a href="mailto:contact@example.com">medicore@marquette.edu</a>
+          <i class="bi bi-phone"></i> +1 4143495697
+        </div>
+        <div class="d-none d-lg-flex social-links align-items-center">
+          <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></i></a>
+        </div>
       </div>
     </div>
-  </div>
+  </body>
+
 
   <!-- ======= Header ======= -->
   <header id="header" class="fixed-top">
@@ -363,6 +363,94 @@
       </div>
     </section><!-- End Gallery Section -->
 
+    <!-- ======= Appointment Section ======= -->
+    <!-- Appointment Section -->
+    <section id="appointment" class="appointment section-bg">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Make an Appointment</h2>
+          <p>Please fill in your details to book an appointment</p>
+        </div>
+
+        <!-- Form -->
+        <form id="appointment-form" class="php-email-form">
+          <div class="row">
+            <div class="col-md-4 form-group">
+              <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+              <div class="validate"></div>
+            </div>
+            <div class="col-md-4 form-group mt-3 mt-md-0">
+              <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email">
+              <div class="validate"></div>
+            </div>
+            <div class="col-md-4 form-group mt-3 mt-md-0">
+              <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone" data-rule="minlen:4" data-msg="Please enter at least 4 chars">
+              <div class="validate"></div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4 form-group mt-6">
+              <label for="meeting-time"></label>
+              <input
+                type="datetime-local"
+                id="meeting-time"
+                name="meetingTime"
+                value="2024-11-12T19:30"
+                min="2024-11-07T00:00"
+                max="2030-12-14T00:00"
+                required />
+              <span class="validity"></span>
+            </div>
+
+            <div class="col-md-4 form-group mt-3">
+              <select name="department" id="department" class="form-select">
+                <option value="">Select Department</option>
+                <option value="Emergency Department">Emergency Department</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Physical Therapy">Physical Therapy</option>
+                <option value="Gynacology">Gynacology</option>
+                <option value="Pediatrics">Pediatrics</option>
+                <option value="Orthopedics Unit">Orthopedics Unit</option>
+                <option value="Gastroenterology">Gastroenterology</option>
+                <option value="Dentistry">Dentistry</option>
+              </select>
+              <div class="validate"></div>
+            </div>
+
+            <div class="col-md-4 form-group mt-3">
+              <select name="doctor" id="doctor" class="form-select">
+                <option value="">Select Doctor</option>
+                <option value="Sarah Jhonson-Anesthesiologist">Sarah Jhonson-Anesthesiologist</option>
+                <option value="Walter White-Chief Medical Officer">Walter White-Chief Medical Officer</option>
+                <option value="William Anderson-Cardiology">William Anderson-Cardiology</option>
+                <option value="Amanda Jepson-Neurosurgeon">Amanda Jepson-Neurosurgeon</option>
+                <option value="Kevin Umba-Gynacology">Kevin Umba-Gynacology</option>
+                <option value="Dr Ntika-Pediatrics">Dr Ntika-Pediatrics</option>
+                <option value="Dr Albert-Emergency Department">Dr Albert-Emergency Department</option>
+                <option value="Dr Asamoah-Dentistry">Dr Asamoah-Dentistry</option>
+              </select>
+              <div class="validate"></div>
+            </div>
+          </div>
+
+          <div class="form-group mt-3">
+            <textarea class="form-control" name="message" rows="5" placeholder="Message (Optional)"></textarea>
+            <div class="validate"></div>
+          </div>
+          <div class="mb-3">
+            <div class="loading">Loading</div>
+            <div class="error-message"></div>
+            <div class="sent-message">Your appointment request has been sent successfully. Thank you!</div>
+          </div>
+          <div class="text-center"><button type="submit">Submit</button></div>
+        </form>
+      </div>
+    </section>
+    <!-- End Appointment Section -->
+
     <!-- ======= Contact Section ======= -->
     <section id="contact" class="contact">
       <div class="container">
@@ -523,7 +611,57 @@
     });
   </script>
 
+  <!-- ===================== Call Appointment Creation Method in Backend ================================== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("appointment-form");
+      
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault(); // Prevent the form's default behavior
+        
+        const formData = {
+          name: document.getElementById("name").value,
+          email: document.getElementById("email").value,
+          phone: document.getElementById("phone").value,
+          meetingTime: document.getElementById("meeting-time").value,
+          department: document.getElementById("department").value,
+          doctor: document.getElementById("doctor").value,
+          message: document.querySelector("textarea[name='message']").value
+        };
 
+        const token = localStorage.getItem("token"); // Replace with your storage method if different
+
+        try {
+          //token = token ? JSON.parse(token).replace('Bearer ', '') : null;
+          const response = await fetch("http://localhost:8080/Appointments/createAppointment", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              doctorEmail: formData.doctor,
+              date: formData.meetingTime,
+              reason_for_appointment: formData.message
+            })
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Server error:", errorText);
+            alert(`Error: ${response.status} - ${errorText}`);
+            return;
+          }
+
+          const result = await response.json();
+          alert(result[0].message); // Show success message
+        } catch (error) {
+          console.error("Error creating appointment:", error);
+          alert("An error occurred. Please try again.");
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
