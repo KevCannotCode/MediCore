@@ -1,11 +1,11 @@
 import React
 from 'react';
-import Appointment from "../Components/Appointment";
+import TestComponent from '../Components/TestComponent';
 
 const Home = () => {
   return (
     <div>
-        <Appointment/>
+        <TestComponent/>
     </div> 
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../styles/appointment_styles.css"; // Add your styles here if needed
 
-const Appointment = () => {
+const CreateAppointment = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -120,4 +120,4 @@ const Appointment = () => {
   );
 };
 
-export default Appointment;
+export default CreateAppointment;
