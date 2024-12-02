@@ -31,7 +31,10 @@ const verifyRole = (allowedRole) => {
     return async (req, res, next) => {
         try {
             // Get jwt payload
-            const auth = req.headers['authorization'];
+            let auth = req.headers['authorization'];
+            if (auth.startsWith('Bearer ')) {
+                auth = auth.slice(7, auth.length).trimLeft();
+            }
             const decoded = jwt.verify(auth, process.env.JWT_SECRET);
             const userId = decoded._id;
 

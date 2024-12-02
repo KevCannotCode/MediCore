@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const UserModel = require("../Models/User");
 const AppointmentModel = require("../Models/Appointment");
 const JWTTokenService = require('jsonwebtoken');
+const MedicalRecordModel = require('../Models/MedicalRecord');
 const ObjectId = mongoose.Types.ObjectId;
 
 
@@ -75,8 +76,8 @@ const createAppointment = async (req, res, next) => {
 const doctorUpdate = async (req, res, next) => {
     try {
         // Get appointment details
-        const { appointmentId } = req.params;
-        const {  treatment, notes, allergies, conditions, medications, immunizations, procedures} = req.body;
+        const { appointmentId, medicalRecordUpdate} = req.params;
+        const { treatment, notes, allergies, conditions, medications, immunizations, procedures} = req.body;
 
         // Data validation
         if (
@@ -90,9 +91,9 @@ const doctorUpdate = async (req, res, next) => {
         ) {
             return res.status(400).json({ message: 'At least one non-empty field must be provided' });
         }
-        
-        if (!appointmentId) {
-            return res.status(400).json({ message: 'Missing required appointment id' });
+
+        if (!appointmentId || !medicalRecordUpdate) {
+            return res.status(400).json({ message: 'Missing required appointment id and medicalRecordUpdate' });    
         }
 
         // Get jwt payload
@@ -113,6 +114,11 @@ const doctorUpdate = async (req, res, next) => {
             return res.status(409).json({ message: 'Appointment does not exist!', success: false });
         }
         
+        //can only update appointment after it has occurred
+        if (new Date(appointment.date) > new Date()) {
+            return res.status(409).json({ message: 'Appointment has not occurred yet!', success: false });
+        }
+
         // Prepare date to update the medical record
         const updateData = {};
 
@@ -146,6 +152,7 @@ const doctorUpdate = async (req, res, next) => {
             updateData.procedures = { $each: [procedures] };
         }
 
+        
         const updatedAppointment = await AppointmentModel.findByIdAndUpdate(
             new ObjectId(appointmentId),
             {
@@ -157,46 +164,69 @@ const doctorUpdate = async (req, res, next) => {
             { new: true }
         );
 
-        // Save the updated appointment
-        await updatedAppointment.save();
+        
+        // Update the corresponding medical record
+        if(medicalRecordUpdate == '1') {
+            const patient = await UserModel.findOne({ _id: appointment.patientId });
+            const updateMedicalRecord = await MedicalRecordModel.findByIdAndUpdate(
+                new ObjectId(patient.medical_records),
+                {
+                    $push: updateData, // Append to arrays
+                    $set: { // Update timestamps and metadata
+                        updated_at: new Date(),
+                        updated_by: doctor._id
+                    }
+                },
+                { new: true }
+            );
+    
+            if (!updateMedicalRecord) {
+                return res.status(404).json({ message: 'Medical record not found' });
+            }
+        
+            await updateMedicalRecord.save();
+        }
+    
         next();
     } catch (err) {
         res.status(500).json({ message: "Internal server errror => " + err, success: false });
     }
 }
-/*
-    AssignRole is a function that returns a middleware function.
-    The middleware function checks if the user exists in the database.
-    If the user exists, the function will update the user's role in the database.
-    If the user does not exist, the function will return a 404 status code with a message.
-*/
-// const assignRole = async (req, res, next) => {
-//     try {
-//         // Get verify email
-//         const { email, newRole } = req.body;
-//         if (!email) {
-//             return res.status(404).json({ message: 'User not found' });
-//         }   
 
-//         const updatedUser = await UserModel.findOneAndUpdate(
-//             { email: email },
-//             { role: newRole },
-//             { new: true, runValidators: true }
-//         );
-//         if (!updatedUser) {
-//             return res.status(404).json({ message: 'User not found', success: false });
-//         }
+const deleteAppointment = async (req, res, next) => {
+    try {
+        const { appointmentId } = req.params;
 
-//         next();
-//     } catch (err) {
-//         return res.status(504).json({ message: 'Check assignRole in AccountManagement' });
-//     }
-// }
-
+        // Get jwt payload
+        const auth = req.headers['authorization'];
+        const decoded = JWTTokenService.verify(auth, process.env.JWT_SECRET);
+        const userId = decoded._id;
+    
+        // Query Doctor 
+        const user = await UserModel.findOne({ _id: userId });
+    
+        // Verify that the appointment exists
+        const appointment = await AppointmentModel.findOne({ _id: new ObjectId(appointmentId) });
+        if (!appointment) {
+            return res.status(409).json({ message: 'Appointment does not exist!', success: false });
+        }
+    
+        if (!user || (user._id.toString() !== appointment.patientId.toString() && user._id.toString() !== appointment.doctorId.toString())) {
+            return res.status(403).json({ message: 'Forbidden, only the respective doctor or patient can delete the appointment' });
+        }
+    
+        // Delete appointment 
+        await appointment.deleteOne();
+        next();
+    } catch (err) {
+        return res.status(504).json({ message: 'Check deleteAccount in Auth\n' + err });
+    }
+}
 /*
     The module.exports object is used to make the functions available to other files.
 */
 module.exports = {
     createAppointment,
-    doctorUpdate
+    doctorUpdate,
+    deleteAppointment
 };
