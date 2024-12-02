@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { handleError, handleSuccess } from '../utils';
+import '../App.css';
+import '../index.css'
+
 
 function Login() {
 
@@ -42,7 +45,7 @@ function Login() {
                 localStorage.setItem('token', jwtToken);
                 localStorage.setItem('loggedInUser', name);
                 setTimeout(() => {
-                    navigate('/home')
+                    navigate('/PatientDashboard')
                 }, 1000)
             } else if (error) {
                 const details = error?.details[0].message;
@@ -55,6 +58,8 @@ function Login() {
             handleError(err);
         }
     }
+
+    
 
     return (
         <div className='container'>

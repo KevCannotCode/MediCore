@@ -7,7 +7,7 @@ function AdminPage() {
     async function fetchData() {
      
       try {
-              // Retrieve JWT token from storage (e.g., localStorage)
+             
       let token = localStorage.getItem("token");
      
       // Replace with your storage method if different
@@ -18,7 +18,7 @@ function AdminPage() {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token, // Include JWT token in the Authorization header
+          Authorization: token, 
         }
       });
  
