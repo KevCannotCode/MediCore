@@ -73,6 +73,50 @@ const createAppointment = async (req, res, next) => {
     }
 }
 
+const getOneAppointment = async (req, res) => {
+    try {
+        const { appointmentId } = req.params;
+
+        // Retrieve all appointments
+        const appointments = await AppointmentModel.find({_id: new ObjectId(appointmentId)}); 
+
+        // Populate doctor and patient names
+        const parsedAppointments = await Promise.all(appointments.map(async (appointment) => {
+            const doctor = await UserModel.findById({_id: appointment.doctorId});
+            const patient = await UserModel.findById({_id: appointment.patientId});
+            return {
+            _id: appointment._id.toString(),
+            date: appointment.date,
+            reason_for_appointment: appointment.reason_for_appointment,
+            treatment: Array.isArray(appointment.treatment) ? appointment.treatment.join("\n\n") : appointment.treatment,
+            notes: Array.isArray(appointment.notes) ? appointment.notes.join("\n\n") : appointment.notes,
+            allergies: Array.isArray(appointment.allergies) ? appointment.allergies.join("\n\n") : appointment.allergies,
+            conditions: Array.isArray(appointment.conditions) ? appointment.conditions.join("\n\n") : appointment.conditions,
+            medications: Array.isArray(appointment.medications) ? appointment.medications.join("\n\n") : appointment.medications,
+            immunizations: Array.isArray(appointment.immunizations) ? appointment.immunizations.join("\n\n") : appointment.immunizations,
+            procedures: Array.isArray(appointment.procedures) ? appointment.procedures.join("\n\n") : appointment.procedures,
+            doctorName: doctor ? doctor.name : 'Unknown Doctor',
+            patientName: patient ? patient.name : 'Unknown Patient',
+            doctorEmail: doctor ? doctor.email : 'Unknown Doctor',
+            patientEmail: patient ? patient.email : 'Unknown Patient'
+            };
+        }));
+
+        // Return the data
+        res.status(200).json({ 
+            success: true, 
+            data: parsedAppointments
+        });
+
+    } catch (err) {
+        // Handle errors
+        res.status(500).json({ 
+            message: "Internal server error => " + err, 
+            success: false 
+        });
+    }
+}
+
 const doctorUpdate = async (req, res, next) => {
     try {
         // Get appointment details
@@ -183,9 +227,79 @@ const doctorUpdate = async (req, res, next) => {
             if (!updateMedicalRecord) {
                 return res.status(404).json({ message: 'Medical record not found' });
             }
-        
-            await updateMedicalRecord.save();
+            
+            else{
+                await updateMedicalRecord.save();
+            }
         }
+    
+        next();
+    } catch (err) {
+        res.status(500).json({ message: "Internal server errror => " + err, success: false });
+    }
+}
+
+const patientUpdate = async (req, res, next) => {
+    try {
+        // Get appointment details
+        const { appointmentId} = req.params;
+        const { doctorEmail, date,reason_for_appointment} = req.body;
+
+        // Data validation
+        if (
+            (!doctorEmail || doctorEmail === '') &&
+            (!date || date === '') &&
+            (!reason_for_appointment || reason_for_appointment === '')
+        ) {
+            return res.status(400).json({ message: 'At least one non-empty field must be provided' });
+        }
+
+        if (!appointmentId) {
+            return res.status(400).json({ message: 'Missing required appointment id and medicalRecordUpdate' });    
+        }
+
+        // Get jwt payload
+        const auth = req.headers['authorization'];
+        const decoded = JWTTokenService.verify(auth, process.env.JWT_SECRET);
+        const patientId = decoded._id;
+
+        // Query Patient 
+        const patient = await UserModel.findOne({ _id: patientId });
+        if (!patient || patient.role.toString() !== 'patient') {
+            return res.status(403).json({ message: 'Forbidden, patient does not exist' });
+        }
+
+        const doctor = await UserModel.findOne({ email: doctorEmail });
+
+        // Verify that the appointment does not exist
+
+        const appointment = await AppointmentModel.findOne({ _id: new ObjectId(appointmentId) });
+        if (!appointment) {
+            return res.status(409).json({ message: 'Appointment does not exist!', success: false });
+        }
+        
+        //can only update appointment after it has occurred
+        // if (new Date(appointment.date) > new Date()) {
+        //     return res.status(409).json({ message: 'Appointment has not occurred yet!', success: false });
+        // }
+
+        // Prepare date to update the medical record
+        const updateData = {};
+
+        // Check for `doctorEmail`, ensuring it's not null, undefined, or an empty array
+        updateData.reason_for_appointment = "Patient " + patient.name +": " + reason_for_appointment + "\n";
+        updateData.date = new Date(date);
+        updateData.doctorId = doctor._id;
+
+        const updatedAppointment = await AppointmentModel.findByIdAndUpdate(
+            new ObjectId(appointmentId),
+            {
+                reason_for_appointment: updateData.reason_for_appointment,
+                date: updateData.date,
+                doctorId: updateData.doctorId
+            },
+            { new: true }
+        );
     
         next();
     } catch (err) {
@@ -222,11 +336,75 @@ const deleteAppointment = async (req, res, next) => {
         return res.status(504).json({ message: 'Check deleteAccount in Auth\n' + err });
     }
 }
+
+const getAllAppointments = async (req, res) => {
+    try {
+        // Get JWT token from the Authorization header
+        const auth = req.headers['authorization'];
+
+        if (!auth) {
+            return res.status(401).json({ message: 'Authorization token is required', success: false });
+        }
+
+        // Decode the token to get user details
+        const decoded = JWTTokenService.verify(auth, process.env.JWT_SECRET);
+        const userId = decoded._id;
+
+        // Fetch the user from the database to determine their role
+        const user = await UserModel.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found', success: false });
+        }
+
+        // Filter appointments based on the user's role
+        const query = (user.role == 'doctor') ? { doctorId: user._id.toString() } : { patientId: user._id.toString() };
+
+        // Retrieve all appointments
+        const appointments = (user.role == 'doctor')? await AppointmentModel.find({doctorId: user._id.toString()}) : await AppointmentModel.find({patientId: user._id.toString()}); 
+
+        // Populate doctor and patient names
+        const parsedAppointments = await Promise.all(appointments.map(async (appointment) => {
+            const doctor = await UserModel.findById({_id: appointment.doctorId});
+            const patient = await UserModel.findById({_id: appointment.patientId});
+            return {
+            _id: appointment._id.toString(),
+            date: appointment.date,
+            reason_for_appointment: appointment.reason_for_appointment,
+            treatment: Array.isArray(appointment.treatment) ? appointment.treatment.join("\n\n") : appointment.treatment,
+            notes: Array.isArray(appointment.notes) ? appointment.notes.join("\n\n") : appointment.notes,
+            allergies: Array.isArray(appointment.allergies) ? appointment.allergies.join("\n\n") : appointment.allergies,
+            conditions: Array.isArray(appointment.conditions) ? appointment.conditions.join("\n\n") : appointment.conditions,
+            medications: Array.isArray(appointment.medications) ? appointment.medications.join("\n\n") : appointment.medications,
+            immunizations: Array.isArray(appointment.immunizations) ? appointment.immunizations.join("\n\n") : appointment.immunizations,
+            procedures: Array.isArray(appointment.procedures) ? appointment.procedures.join("\n\n") : appointment.procedures,
+            doctorName: doctor ? doctor.name : 'Unknown Doctor',
+            patientName: patient ? patient.name : 'Unknown Patient'
+            };
+        }));
+
+        // Return the data
+        res.status(200).json({ 
+            success: true, 
+            data: parsedAppointments
+        });
+
+    } catch (err) {
+        // Handle errors
+        res.status(500).json({ 
+            message: "Internal server error => " + err, 
+            success: false 
+        });
+    }
+}
 /*
     The module.exports object is used to make the functions available to other files.
 */
 module.exports = {
     createAppointment,
     doctorUpdate,
-    deleteAppointment
+    deleteAppointment,
+    getAllAppointments,
+    getOneAppointment,
+    patientUpdate
 };

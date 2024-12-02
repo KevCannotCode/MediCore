@@ -48,10 +48,25 @@ const AppointmentManagement = require('../Controllers/AppointmentController');
  * router.use(Auth.verifyRole('patient'));
  * TODO: serve the appropriate frontend pages
  */
+router.get('/getOneAppointment/:appointmentId', AppointmentManagement.getOneAppointment, (req, res) => {
+    console.log('---- Get One Appointment GET ---', req.user);
+});
+
+router.get('/getAllAppointments', AppointmentManagement.getAllAppointments, (req, res) => {
+    console.log('---- Get All Appointments GET ---', req.user);
+});
+
 router.post('/createAppointment', Auth.verifyRole('patient'), AppointmentManagement.createAppointment, (req, res) => {
     console.log('---- Create Appointment POST ---', req.user);
     res.status(200).json([
         { message: 'Appointment was successfully created '}
+    ])
+});
+
+router.post('/patientUpdate/:appointmentId', Auth.verifyRole('patient'), AppointmentManagement.patientUpdate, (req, res) => {
+    console.log('---- Update Appointment POST ---', req.user);
+    res.status(200).json([
+        { message: 'Appointment was successfully updated by patient '}
     ])
 });
 
