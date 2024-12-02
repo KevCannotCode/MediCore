@@ -10,6 +10,8 @@ const ProductRouter = require('./Routes/ProductRouter');
 const AdminRouter = require('./Routes/AdminRouter');
 const MedicalRecordRouter = require('./Routes/MedicalRecordRoutes');
 const AppointmentRouter = require('./Routes/AppointmentRouter');
+const userRoutes = require('./Routes/userRoutes');
+const getUserRoute = require('./Routes/getUserRoute');
 
 // Load environment variables and database connection
 require('dotenv').config();
@@ -33,6 +35,8 @@ app.use('/products', ProductRouter);
 app.use('/Admin', AdminRouter);
 app.use('/medicalRecord', MedicalRecordRouter);
 app.use('/Appointments', AppointmentRouter);
+app.use(userRoutes);//admin dash
+app.use('/api/patient', getUserRoute);//dashboard
 
 // Start the server and listen on the specified port
 app.listen(PORT, () => {
