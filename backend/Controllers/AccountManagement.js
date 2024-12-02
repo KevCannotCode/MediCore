@@ -2,6 +2,17 @@
 const bcrypt = require('bcrypt');
 const UserModel = require("../Models/User");
 
+//Function retreives users
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await UserModel.find({}, { name: 1, email: 1, role: 1 }); // Fetch only name, email, and role fields
+        res.status(200).json(users);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch users', error: err.message });
+    }
+};
+
+
 /* 
     The deleteAccount is a function that returns a middleware function. 
     The middleware function checks if the user exists in the database. 
@@ -84,5 +95,6 @@ const assignRole = async (req, res, next) => {
 module.exports = {
     deleteAccount,
     createAccount,
-    assignRole
+    assignRole,
+    getAllUsers
 };
