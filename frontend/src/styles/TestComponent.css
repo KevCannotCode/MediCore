@@ -1,0 +1,173 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  /* Container for the entire page */
+  .mx-auto {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Header Section */
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .text-xs {
+    font-size: 12px;
+  }
+  
+  /* Appointments Box Container */
+  .appointments-box {
+    width: 100%;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .appointment-group {
+    margin-bottom: 40px;
+  }
+  
+  h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  
+  /* Appointment Table Styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  thead {
+    background-color: #4A90E2;
+  }
+  
+  th {
+    padding: 15px;
+    text-align: left;
+  }
+  
+  td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .text-gray-500 {
+    color: #6b7280;
+  }
+  
+  /* Button Styling */
+  button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    opacity: 0.8;
+  }
+  
+  /* Status Indicator Styling */
+  span {
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  
+  .bg-green-200 {
+    background-color: #d1fae5;
+    color: #10b981;
+  }
+  
+  .bg-yellow-200 {
+    background-color: #fef08a;
+    color: #eab308;
+  }
+  
+  .bg-red-200 {
+    background-color: #fee2e2;
+    color: #f87171;
+  }
+  
+  .bg-blue-600 {
+    background-color: #2563eb;
+    color: white;
+  }
+  
+  /* Pagination */
+  .flex {
+    display: flex;
+  }
+  
+  .sm\\:text-sm {
+    font-size: 14px;
+  }
+  
+  .sm\\:mt-0 {
+    margin-top: 0;
+  }
+  
+  .mt-2 {
+    margin-top: 8px;
+  }
+  
+  .mr-2 {
+    margin-right: 8px;
+  }
+  
+  .h-12 {
+    height: 48px;
+  }
+  
+  .w-12 {
+    width: 48px;
+  }
+  
+  .rounded-full {
+    border-radius: 9999px;
+  }
+  
+  .text-gray-600 {
+    color: #4b5563;
+  }
+  
+  .bg-white {
+    background-color: #fff;
+  }
+  
+  .border {
+    border: 1px solid #ddd;
+  }
+  
+  .hover\\:bg-gray-100:hover {
+    background-color: #f7f7f7;
+  }
+  
+  .transition {
+    transition: all 0.3s ease;
+  }
+  
+  .font-semibold {
+    font-weight: 600;
+  }
+  
+  .text-sm {
+    font-size: 14px;
+  }
+  
+  .text-xs {
+    font-size: 12px;
+  }
+  

@@ -1,35 +1,72 @@
-.form-container { 
-    width: '300px'; 
-    margin: '20px'; 
-    padding: '20px'; 
-    border: '1px solid #d5e1ed'
-}
+/* .form-card - Main container style for the form (acts as a "card") */
+.form-card {
+    width: 400px; /* The width of the form card container. Set to 400px here, but you can adjust this number to make the form wider or narrower. */
+    margin: 20px auto; /* Centers the form card horizontally with 'auto' and adds a 20px space above and below the form. */
+    padding: 20px; /* Padding inside the form card, 20px on all sides */
+    background-color: #6a0dad04; /* Background color of the form card */
+    border-radius: 10px; /* Rounded corners for the card, '10px' is a moderate rounding */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow effect, the values here control the shadow's size, spread, and opacity */
+    border: 1px solid #ddd; /* Light gray border around the form card */
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,'Montserrat',Ubuntu,sans-serif;
+  }
+  
+  h2{
+    text-align: center;
+    color: #6a0dad;
+    padding: 10px; /* 10px top and bottom padding, 5px left and right padding */
+  }
 
-div {
-    margin-bottom: '10px'
-}
+  label{
+    font-size: 16px; /* Larger font size for the labels */
+  }
 
-input {
-    width: '100%'; 
-    padding: '10px'; 
-    margin-top: '5px'; 
-    margin-bottom: '10px'; 
-    border: '1px 100px 100px 100px solid #ccc'; 
-    border-radius: '4px';
-    font-size: '16px'
-}
+  text {
+    text-align: center;
+    color: #000000;
+    padding-bottom: 20px; /* 20px top padding, 50px right padding, 20px bottom padding, 20px left padding */
+  }
 
-button {
-    width: '100%'; 
-    padding: '10px'; 
-    margin-top: '5px'; 
-    margin-bottom: '10px'; 
-    border: '1px solid #ccc'; 
-    border-radius: '4px'; 
-    background-color: '#4CAF50'; 
-    color: 'white'; 
-    font-size: '16px';
-    background: '#4CAF50'; 
-    color: 'green';
-    cursor: 'pointer'
-}
+  /* .form-group - Style for each input container, which wraps label and input together */
+  .form-group {
+    margin: 20px 5px 20px 5px; /* Spacing between each group (label + input) of the form. '20px' separates them vertically */
+  }
+  
+  /* .form-input - General input field and textarea styling */
+  .form-input {
+    width: 100%; /* Ensures the input or textarea fills the width of its parent container (form group) */
+    padding: 10px; /* Padding inside the input/textarea for better readability and clickable area */
+    margin-top: 5px; /* Space between the label and the input field */
+    border: 1px solid #ccc; /* Border color, '1px solid' means a thin solid line with light gray color (#ccc) */
+    border-radius: 5px; /* Slightly rounded corners on input fields and textarea */
+    font-size: 14px; /* Text size inside the input/textarea */
+    box-sizing: border-box; /* Ensures the padding and border are included in the element's total width, preventing overflow */
+    resize: vertical; /* Allows resizing the textarea vertically, but not horizontally */
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  /* .submit-button - Unique styling for the submit button */
+  .submit-button {
+    padding: 10px 20px; /* 10px vertical padding and 20px horizontal padding to make the button bigger and more clickable */
+    background-color: #6a0dad; /* Purple background color for the button */
+    color: white; /* White text color */
+    font-size: 16px; /* Slightly larger font size for the button text */
+    border: none; /* Removes the default border around the button */
+    border-radius: 5px; /* Rounded corners for the button */
+    cursor: pointer; /* Changes the cursor to a "pointer" (hand) when hovering over the button, indicating it's clickable */
+    transition: background-color 0.3s ease; /* Smooth transition for the background color when hovering over the button */
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  /* Hover effect for the submit button */
+  .submit-button:hover {
+    background-color: #9b30b8; /* Changes the background color to a lighter shade of purple when the button is hovered over */
+  }
+  
+  /* Optional: Focus style for inputs and textareas when clicked or focused */
+  .form-input:focus {
+    border-color: #6a0dad; /* Changes the border color to purple when the input is focused, making it stand out */
+    outline: none; /* Removes the default outline that browsers apply when focusing on an input */
+  }
+  
+
+  
