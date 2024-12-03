@@ -1,0 +1,91 @@
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  background-color: #eef2f5;
+}
+
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  width: 100%; /* Ensure the container takes full width of the screen */
+}
+
+.sidebar {
+  width: 30%; /* Increase sidebar width to take up more space */
+  background: #2c3e50;
+  color: #ecf0f1;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-title {
+  text-align: center;
+  font-size: 2em; /* Increased font size for title */
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-menu li {
+  padding: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: bold;
+  transition: background 0.3s, color 0.3s;
+}
+
+.sidebar-menu li:hover {
+  background: #34495e;
+  color: #ecdbff;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 200px; /* Increased padding to create more space */
+  background: #ffffff;
+  overflow-y: auto;
+  max-width: 75%; /* Adjusted to match the sidebar width */
+}
+
+.profile-section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 26px; /* Larger section title */
+  font-weight: bold;
+  color: #2c3e50;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  margin-top: -100px; /* Adjusted margin-top to push it higher */
+  margin-bottom: 10px; /* Reduced bottom margin to make space above */
+}
+
+.user-info {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #444;
+}
+
+.user-info p {
+  margin: 5px 0;
+}
+
+.user-info strong {
+  color: #2c3e50;
+}
+
+.Toastify__toast-container {
+  font-size: 14px;
+}
+
+.Toastify__toast--error {
+  background-color: #e74c3c;
+  color: #fff;
+}
